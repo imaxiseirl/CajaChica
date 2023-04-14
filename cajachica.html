@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja Chica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .titulo {
+            text-align: center;
+            color: #004085;
+            margin-bottom: 20px;
+        }
+        .formulario {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .campo {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .campo label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .campo input[type="text"], .campo input[type="number"], .campo input[type="date"], .campo select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        .campo.half {
+            width: calc(50% - 10px);
+        }
+        .campo.tercera {
+            width: calc(33.333% - 10px);
+        }
+        button {
+            background-color: #004085;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .historico {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #dee2e6;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titulo">Control de Caja Chica</h1>
+        <form id="formRecibo">
+            <div class="formulario">
+                <div class="campo tercera">
+                    <label for="id_recibo">ID Recibo:</label>
+                    <input type="text" id="id_recibo" disabled>
+                </div>
+                <div class="campo tercera">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <div class="campo tercera">
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" required>
+                        <option value="">Seleccione una categoría</option>
+                        <option>Material de oficina</option>
+                        <option>Gasto de transporte</option>
+                        <option>Comidas y refrigerios</option>
+                                               <option>Mantenimiento y reparaciones menores</option>
+                        <option>Gastos de mensajería</option>
+                        <option>Gastos de impresión</option>
+                        <option>Gastos de capacitación</option>
+                        <option>Gastos hospitalidad</option>
+                        <option>Gastos del colmado</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="empresa">Empresa:</label>
+                    <input type="text" id="empresa" required>
+                </div>
+                <div class="campo">
+                    <label for="rnc">RNC:</label>
+                    <input type="text" id="rnc" required>
+                </div>
+                <div class="campo">
+                    <label for="descripcion">Descripción:</label>
+                    <input type="text" id="descripcion" required>
+                </div>
+                <div class="campo">
+                    <label for="monto_gastos">Monto de Gastos:</label>
+                    <input type="number" id="monto_gastos" step="0.01" min="0" required>
+                </div>
+                <div class="campo">
+                    <label for="metodo_pago">Método de pago:</label>
+                    <select id="metodo_pago" required>
+                        <option value="">Seleccione un método de pago</option>
+                        <option>Efectivo</option>
+                        <option>Transferencia</option>
+                        <option>Cheque</option>
+                    </select>
+                </div>
+                <div class="campo half" id="campo_num_cuenta" style="display: none;">
+                    <label for="numero_cuenta">Número de cuenta:</label>
+                    <input type="text" id="numero_cuenta">
+                </div>
+                <div class="campo half" id="campo_banco" style="display: none;">
+                    <label for="banco">Banco:</label>
+                    <select id="banco">
+                        <option value="">Seleccione un banco</option>
+                        <option>Banreservas</option>
+                        <option>Popular</option>
+                        <option>BHD</option>
+                    </select>
+                </div>
+                <div class="campo" id="campo_num_cheque" style="display: none;">
+                    <label for="numero_cheque">Número de cheque:</label>
+                    <input type="text" id="numero_cheque">
+                </div>
+                <div class="campo">
+                    <label for="responsable_gasto">Responsable del gasto:</label>
+                    <input type="text" id="responsable_gasto" required>
+                </div>
+                <div class="campo">
+                    <label for="ubicacion_caja_chica">Ubicación Caja Chica:</label>
+                    <select id="ubicacion_caja_chica" required>
+                        <option value="">Seleccione una ubicación</option>
+                        <option>Santo Domingo</option>
+                        <option>Azua</option>
+                        <option>Boca Chica</option>
+                        <option>Santiago</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Guardar Recibo</button>
+        </form>
+        <div class="historico">
+            <h2>Historial de Pagos</h2>
+            <table id="tabla_historico">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fch</th>
+                        <th>Cat</th>
+                        <th>Emp</th>
+                        <th>RNC</th>
+                        <th>Desc</th>             
+                        <th>Monto</th>
+                        <th>Mét. Pago</th>
+                        <th>Cta/Chq</th>
+                        <th>Banco</th>
+                        <th>Resp.</th>
+                        <th>Ubic.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <button onclick="limpiarBaseDeDatos()">Limpiar base de datos</button>
+    </div>
+    <script>
+        const idRecibo = document.getElementById('id_recibo');
+        const fecha = document.getElementById('fecha');
+        const categoria = document.getElementById('categoria');
+        const empresa = document.getElementById('empresa');
+        const rnc = document.getElementById('rnc');
+        const descripcion = document.getElementById('descripcion');
+        const montoGastos = document.getElementById('monto_gastos');
+        const metodoPago = document.getElementById('metodo_pago');
+        const numeroCuenta = document.getElementById('numero_cuenta');
+        const banco = document.getElementById('banco');
+        const numeroCheque = document.getElementById('numero_cheque');
+        const responsableGasto = document.getElementById('responsable_gasto');
+        const ubicacionCajaChica = document.getElementById('ubicacion_caja_chica');
+        const campoNumCuenta = document.getElementById('campo_num_cuenta');
+        const campoBanco = document.getElementById('campo_banco');
+        const campoNumCheque = document.getElementById('campo_num_cheque');
+        const tablaHistorico = document.getElementById('tabla_historico');
+
+        let historico = [];
+        let idActual = 1;
+
+        function actualizarCampos() {
+            idRecibo.value = idActual;
+            fecha.value = '';
+            categoria.value = '';
+            empresa.value = '';
+            rnc.value = '';
+            descripcion.value = '';
+            montoGastos.value = '';
+            metodoPago.value = '';
+            numeroCuenta.value = '';
+            banco.value = '';
+            numeroCheque.value = '';
+            responsableGasto.value = '';
+            ubicacionCajaChica.value = '';
+
+            campoNumCuenta.style.display = 'none';
+            campoBanco.style.display = 'none';
+            campoNumCheque.style.display = 'none';
+        }
+
+        function actualizarTabla() {
+            tablaHistorico.querySelector('tbody').innerHTML = historico.map(item => `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.categoria}</td>
+                    <td>${item.empresa}</td>
+                    <td>${item.rnc}</td>
+                    <td>${item.descripcion}</td>
+                    <td>${item.montoGastos.toFixed(2)}</td>
+                    <td>${item.metodoPago}</td>
+                    <td>${item.numeroCuenta || item.numeroCheque || ''}</td>
+                    <td>${item.banco || ''}</td>
+                    <td>${item.responsableGasto}</td>
+                    <td>${item.ubicacionCajaChica}</td>
+                </tr>
+            `).join('');
+        }
+
+        function limpiarBaseDeDatos() {
+            historico = [];
+            actualizarTabla();
+        }
+
+        metodoPago.addEventListener('change', () => {
+            switch (metodoPago.value) {
+                case 'Transferencia':
+                    campoNumCuenta.style.display = 'block';
+                    campoBanco.style.display = 'block';
+                    campoNumCheque.style.display = 'none';
+                    break;
+                case 'Cheque':
+                    campoNumCuenta.style.display = 'none';
+                    campoBanco.style.display = 'none';
+                    campoNumCheque.style.display = 'block';
+                    break;
+                default:
+                   
+                    campoNumCuenta.style.display = 'none';
+                    campoBanco.style.display = 'none';
+                    campoNumCheque.style.display = 'none';
+                    break;
+            }
+        });
+
+        document.getElementById('formRecibo').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nuevoRecibo = {
+                id: idActual,
+                fecha: fecha.value,
+                categoria: categoria.value,
+                empresa: empresa.value,
+                rnc: rnc.value,
+                descripcion: descripcion.value,
+                montoGastos: parseFloat(montoGastos.value),
+                metodoPago: metodoPago.value,
+                numeroCuenta: metodoPago.value === 'Transferencia' ? numeroCuenta.value : undefined,
+                banco: metodoPago.value === 'Transferencia' ? banco.value : undefined,
+                numeroCheque: metodoPago.value === 'Cheque' ? numeroCheque.value : undefined,
+                responsableGasto: responsableGasto.value,
+                ubicacionCajaChica: ubicacionCajaChica.value
+            };
+
+            historico.push(nuevoRecibo);
+            idActual++;
+
+            actualizarCampos();
+            actualizarTabla();
+        });
+
+        // Inicialización
+        actualizarCampos();
+    </script>
+</body>
+</html>
+
